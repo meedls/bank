@@ -4,18 +4,7 @@ import java.util.stream.Collectors;
 public class Main {
 
     public static void main(String[] args) {
-          //1 Задание
-//        BankAccount acc1 = new BankAccount("Иван");
-//        BankAccount acc2 = new BankAccount("Петр");
-//
-//        acc1.deposit(1000);
-//        acc1.transfer(acc2, 400);
-//
-//        System.out.println(acc1);
-//        System.out.println();
-//        System.out.println(acc2);
 
-        //2 Задание
         Random random = new Random();
         int[] years = new int[50];
         int currentYear = 2025;
@@ -45,23 +34,20 @@ public class Main {
         models.add("Audi A6");
 
         Set<String> uniqueModels = new HashSet<>(models);
-
         List<String> sortedModels = new ArrayList<>(uniqueModels);
         sortedModels.sort(Comparator.reverseOrder());
 
         System.out.println("\nОтсортированные модели:");
 
-        for (int i = 0; i < sortedModels.size(); i++) {
-            String model = sortedModels.get(i);
+        Set<String> finalSet = new HashSet<>();
 
+        for (String model : sortedModels) {
             if (model.contains("Tesla")) {
                 model = "ELECTRO_CAR";
             }
-
             System.out.println(model);
+            finalSet.add(model);
         }
-
-        Set<String> finalSet = new HashSet<>(sortedModels);
 
 
         Car car1 = new Car("VIN1", "Camry", "Toyota", 2020, 30000, 20000);
@@ -107,19 +93,75 @@ public class Main {
                 cars.stream().collect(Collectors.groupingBy(Car::getManufacturer));
 
         System.out.println("Группировка по производителю:");
-        System.out.println(grouped);
+        grouped.forEach((k, v) -> System.out.println(k + " -> " + v));
 
 
         CarDealership dealership = new CarDealership();
         dealership.addCar(new Car("VIN7", "Model X", "Tesla", 2022, 15000, 80000, CarType.ELECTRIC));
         dealership.addCar(new Car("VIN8", "RAV4", "Toyota", 2020, 25000, 30000, CarType.SUV));
 
-        dealership.printStatistics();
+        runMenu(dealership);
+    }
+
+    //Меню
+    private static void runMenu(CarDealership dealership) {
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\n=== МЕНЮ АВТОЦЕНТРА ===");
+            System.out.println("1. Добавить машину");
+            System.out.println("2. Найти по производителю");
+            System.out.println("3. Средняя цена по типу");
+            System.out.println("4. Показать все (сортировка по году)");
+            System.out.println("5. Статистика");
+            System.out.println("0. Выход");
+
+            choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("VIN: ");
+                    String vin = scanner.nextLine();
+                    System.out.print("Модель: ");
+                    String model = scanner.nextLine();
+                    System.out.print("Производитель: ");
+                    String manufacturer = scanner.nextLine();
+                    System.out.print("Год: ");
+                    int year = scanner.nextInt();
+                    System.out.print("Пробег: ");
+                    int mileage = scanner.nextInt();
+                    System.out.print("Цена: ");
+                    double price = scanner.nextDouble();
+                    scanner.nextLine();
+                    System.out.print("Тип (SEDAN, SUV, ELECTRIC): ");
+                    CarType type = CarType.valueOf(scanner.nextLine().toUpperCase());
+
+                    dealership.addCar(new Car(vin, model, manufacturer, year, mileage, price, type));
+                    break;
+
+                case 2:
+                    System.out.print("Производитель: ");
+                    dealership.findByManufacturer(scanner.nextLine())
+                            .forEach(System.out::println);
+                    break;
+
+                case 3:
+                    System.out.print("Тип: ");
+                    CarType t = CarType.valueOf(scanner.nextLine().toUpperCase());
+                    System.out.println("Средняя цена: " + dealership.averagePriceByType(t));
+                    break;
+
+                case 4:
+                    dealership.sortedByYear().forEach(System.out::println);
+                    break;
+
+                case 5:
+                    dealership.printStatistics();
+                    break;
+            }
+
+        } while (choice != 0);
     }
 }
-
-
-
-
-
-
