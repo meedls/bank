@@ -69,10 +69,21 @@ public class Main {
 
 
         List<Car> cars = new ArrayList<>();
-        cars.add(new Car("VIN3", "Model S", "Tesla", 2023, 10000, 70000));
-        cars.add(new Car("VIN4", "Q7", "Audi", 2018, 60000, 40000));
-        cars.add(new Car("VIN5", "X3", "BMW", 2021, 30000, 45000));
-        cars.add(new Car("VIN6", "Civic", "Honda", 2019, 40000, 20000));
+        String[] manufacturers = {"Toyota", "BMW", "Audi", "Tesla", "Honda"};
+        CarType[] types = CarType.values();
+
+        for (int i = 1; i <= 50; i++) {
+            String vin = "VIN" + (100 + i);
+            String manufacturer = manufacturers[random.nextInt(manufacturers.length)];
+            String model = "Model_" + i;
+            int year = 2000 + random.nextInt(26);
+            int mileage = random.nextInt(150000);
+            double price = 10000 + random.nextInt(90000);
+            CarType type = types[random.nextInt(types.length)];
+
+            cars.add(new Car(vin, model, manufacturer, year, mileage, price, type));
+        }
+
 
         System.out.println("\nТоп-3 самых дорогих:");
 
